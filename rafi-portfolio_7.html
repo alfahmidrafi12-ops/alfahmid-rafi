@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al Fahmid Rafi — AI Specialist</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#02040e;--bg2:#070b18;--bg3:#0b1020;
+  --a1:#00f5c4;--a2:#7b61ff;--a3:#ff4d6d;--a4:#f5a623;--a5:#00d4ff;--a6:#ff61d8;
+  --text:#eef0ff;--muted:#6b7a99;
+  --b1:rgba(0,245,196,0.12);--b2:rgba(123,97,255,0.14);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;cursor:none;}
+
+/* ── BMW CURSOR ── */
+#bmw{position:fixed;width:72px;height:38px;pointer-events:none;z-index:9999;transform:translate(-50%,-60%);transition:filter .2s,transform .15s;}
+#bmw.hover{filter:drop-shadow(0 0 14px #a78bfa) drop-shadow(0 0 28px #7b61ff);transform:translate(-50%,-60%) scale(1.25);}
+
+/* ── TRAIL CANVAS ── */
+#trail-canvas{position:fixed;inset:0;z-index:9990;pointer-events:none;}
+
+/* ── PARTICLE CANVAS ── */
+#particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ── GRID ── */
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,245,196,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,196,0.022) 1px,transparent 1px);
+  background-size:52px 52px;pointer-events:none;z-index:0;
+  animation:gridMove 25s linear infinite;}
+@keyframes gridMove{0%{background-position:0 0}100%{background-position:52px 52px}}
+
+/* ── ORBS ── */
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;animation:orb 10s ease-in-out infinite;}
+.o1{width:520px;height:520px;background:rgba(123,97,255,.13);top:-150px;right:-120px;}
+.o2{width:380px;height:380px;background:rgba(0,245,196,.09);bottom:40px;left:-100px;animation-delay:-4s;}
+.o3{width:320px;height:320px;background:rgba(255,77,109,.09);top:50%;right:4%;animation-delay:-7s;}
+.o4{width:260px;height:260px;background:rgba(245,166,35,.07);top:32%;left:22%;animation-delay:-2s;}
+.o5{width:220px;height:220px;background:rgba(0,212,255,.07);bottom:28%;right:28%;animation-delay:-5s;}
+.o6{width:180px;height:180px;background:rgba(255,97,216,.06);top:70%;left:40%;animation-delay:-8s;}
+@keyframes orb{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(32px) scale(1.04)}}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+  backdrop-filter:blur(32px) saturate(1.6);background:rgba(2,4,14,.82);
+  border-bottom:1px solid rgba(0,245,196,.09);}
+
+.nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:15px;letter-spacing:2px;flex-shrink:0;
+  background:linear-gradient(135deg,#00f5c4,#7b61ff,#ff61d8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+.nav-btns{display:flex;gap:4px;flex-wrap:wrap;}
+.nb{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);
+  color:var(--muted);font-family:'Space Mono',monospace;font-size:10px;
+  text-decoration:none;cursor:none;transition:all .22s;letter-spacing:.3px;}
+.nb .d{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.nb:hover{color:var(--text);transform:translateY(-1px);}
+.nb.a1h:hover{border-color:rgba(0,245,196,.5);box-shadow:0 0 16px rgba(0,245,196,.2);background:rgba(0,245,196,.05);}
+.nb.a2h:hover{border-color:rgba(123,97,255,.5);box-shadow:0 0 16px rgba(123,97,255,.2);background:rgba(123,97,255,.05);}
+.nb.a3h:hover{border-color:rgba(255,77,109,.5);box-shadow:0 0 16px rgba(255,77,109,.2);background:rgba(255,77,109,.05);}
+.nb.a4h:hover{border-color:rgba(245,166,35,.5);box-shadow:0 0 16px rgba(245,166,35,.2);background:rgba(245,166,35,.05);}
+.nb .d.c1{background:var(--a1);} .nb .d.c2{background:var(--a2);}
+.nb .d.c3{background:var(--a3);} .nb .d.c4{background:var(--a4);}
+
+/* Contact */
+.cw{position:relative;}
+.cbtn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:8px;
+  background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:none;cursor:none;
+  transition:all .22s;letter-spacing:.4px;}
+.cbtn:hover{box-shadow:0 0 32px rgba(0,245,196,.5),0 0 60px rgba(123,97,255,.25);transform:translateY(-2px);}
+.cdrop{position:absolute;top:calc(100% + 10px);right:0;background:var(--bg3);border:1px solid var(--b1);
+  border-radius:12px;padding:8px;min-width:220px;opacity:0;pointer-events:none;
+  transform:translateY(-8px) scale(.97);transition:all .22s;
+  box-shadow:0 24px 60px rgba(0,0,0,.65);z-index:300;}
+.cdrop.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
+.cdrop a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;
+  text-decoration:none;color:var(--text);font-size:12px;transition:background .15s;cursor:none;}
+.cdrop a:hover{background:rgba(255,255,255,.05);}
+.ci{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.wa .ci{background:rgba(37,211,102,.15);} .em .ci{background:rgba(0,245,196,.12);}
+.cs{color:var(--muted);font-size:10px;margin-top:1px;}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding:110px 44px 80px;max-width:960px;margin:0 auto;}
+
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:10.5px;color:var(--a1);
+  margin-bottom:20px;letter-spacing:3px;text-transform:uppercase;
+  opacity:0;animation:fu .8s ease forwards .3s;}
+.eyebrow::before{content:'';width:28px;height:1px;background:linear-gradient(90deg,var(--a1),var(--a2));}
+
+/* Avatar with rotating rainbow border */
+.av-wrap{margin-bottom:28px;opacity:0;animation:fu .8s ease forwards .15s;}
+.av-outer{width:100px;height:100px;border-radius:50%;padding:3px;
+  background:conic-gradient(from 0deg,var(--a1),var(--a2),var(--a3),var(--a4),var(--a5),var(--a6),var(--a1));
+  animation:spinBorder 3s linear infinite;}
+@keyframes spinBorder{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.av{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#0d1428,#1a1040);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-weight:900;font-size:22px;
+  background-clip:padding-box;
+  color:transparent;background:linear-gradient(135deg,var(--a2),var(--a1)) text;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+/* fallback for av text */
+.av-inner{width:94px;height:94px;border-radius:50%;background:linear-gradient(135deg,#0d1428,#110d2e);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-weight:900;font-size:20px;letter-spacing:1px;}
+.av-inner span{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a6));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+.hero-name{font-family:'Orbitron',monospace;font-weight:900;
+  font-size:clamp(36px,6.5vw,80px);line-height:1.05;letter-spacing:-1px;
+  opacity:0;animation:fu .8s ease forwards .5s;}
+.ng{background:linear-gradient(135deg,var(--a1) 0%,var(--a2) 30%,var(--a3) 55%,var(--a4) 75%,var(--a5) 90%,var(--a1) 100%);
+  background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:gshift 4s ease infinite;}
+@keyframes gshift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.glitch{position:relative;display:inline-block;}
+.glitch::after{content:attr(data-text);position:absolute;top:0;left:3px;
+  background:linear-gradient(135deg,var(--a3),var(--a6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  clip-path:polygon(0 25%,100% 25%,100% 50%,0 50%);opacity:0;animation:glitch 7s infinite;}
+@keyframes glitch{0%,91%,97%,100%{opacity:0;transform:translateX(0)}93%{opacity:.45;transform:translateX(-5px)}95%{opacity:.2;transform:translateX(4px)}}
+
+.hero-sub{margin-top:22px;font-size:clamp(13px,1.8vw,17px);color:var(--muted);
+  line-height:1.75;max-width:560px;opacity:0;animation:fu .8s ease forwards .7s;}
+.hero-sub strong{color:var(--text);font-weight:400;}
+.tc{color:var(--a1);animation:blink 1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Tags */
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;opacity:0;animation:fu .8s ease forwards .9s;}
+.tag{font-size:10px;padding:6px 15px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;
+  font-weight:700;transition:all .25s;cursor:default;}
+.tag:hover{transform:translateY(-3px) scale(1.06);}
+.t1{background:rgba(0,245,196,.07);color:var(--a1);border:1px solid rgba(0,245,196,.22);}
+.t1:hover{box-shadow:0 0 24px rgba(0,245,196,.35);}
+.t2{background:rgba(123,97,255,.07);color:#a78bfa;border:1px solid rgba(123,97,255,.22);}
+.t2:hover{box-shadow:0 0 24px rgba(123,97,255,.35);}
+.t3{background:rgba(255,77,109,.07);color:#fb7185;border:1px solid rgba(255,77,109,.22);}
+.t3:hover{box-shadow:0 0 24px rgba(255,77,109,.35);}
+.t4{background:rgba(245,166,35,.07);color:var(--a4);border:1px solid rgba(245,166,35,.22);}
+.t4:hover{box-shadow:0 0 24px rgba(245,166,35,.35);}
+.t5{background:rgba(255,97,216,.07);color:var(--a6);border:1px solid rgba(255,97,216,.22);}
+.t5:hover{box-shadow:0 0 24px rgba(255,97,216,.35);}
+
+/* CTA buttons */
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:42px;opacity:0;animation:fu .8s ease forwards 1.1s;}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 26px;border-radius:8px;
+  font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-decoration:none;
+  letter-spacing:.4px;transition:all .25s;position:relative;overflow:hidden;cursor:none;border:none;}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.08);opacity:0;transition:opacity .2s;}
+.btn:hover::after{opacity:1;}
+.btn:hover{transform:translateY(-3px);}
+.btn:active{transform:scale(.98);}
+.bp{background:linear-gradient(135deg,var(--a1),var(--a5));color:#050810;}
+.bp:hover{box-shadow:0 10px 34px rgba(0,245,196,.45),0 0 60px rgba(0,212,255,.2);}
+.bs{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.11);}
+.bs:hover{border-color:var(--a2);color:#a78bfa;box-shadow:0 8px 28px rgba(123,97,255,.25);}
+.arr{transition:transform .2s;} .btn:hover .arr{transform:translateX(4px);}
+
+.scroll-hint{display:flex;align-items:center;gap:10px;margin-top:56px;font-size:10px;color:var(--muted);
+  letter-spacing:2px;text-transform:uppercase;opacity:0;animation:fu .8s ease forwards 1.4s;}
+.sline{width:36px;height:1px;background:var(--muted);overflow:hidden;position:relative;}
+.sline::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,var(--a1),var(--a2));animation:scan 2.2s ease-in-out infinite;}
+@keyframes scan{0%{left:-100%}100%{left:100%}}
+
+/* ── SECTION ── */
+.sec{position:relative;z-index:1;padding:80px 44px;max-width:960px;margin:0 auto;}
+.sec-lbl{font-size:10px;color:var(--a1);letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:34px;display:flex;align-items:center;gap:12px;font-family:'Orbitron',monospace;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--b1),transparent);}
+
+/* Cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:16px;}
+.card{background:var(--bg2);border:1px solid rgba(255,255,255,.055);border-radius:14px;
+  padding:26px 22px;transition:all .32s;position:relative;overflow:hidden;cursor:none;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3),var(--a4));
+  transform:scaleX(0);transition:transform .4s;transform-origin:left;}
+.card::after{content:'';position:absolute;inset:0;border-radius:14px;
+  background:radial-gradient(circle at 50% -10%,rgba(0,245,196,.06),transparent 65%);
+  opacity:0;transition:opacity .32s;}
+.card:hover::before{transform:scaleX(1);}
+.card:hover::after{opacity:1;}
+.card:hover{border-color:rgba(0,245,196,.18);transform:translateY(-7px) rotate(.3deg);
+  box-shadow:0 32px 64px rgba(0,0,0,.45),0 0 30px rgba(0,245,196,.07);}
+.ci2{font-size:30px;margin-bottom:14px;display:block;}
+.ct{font-family:'Orbitron',monospace;font-weight:700;font-size:14px;margin-bottom:8px;}
+.cd{font-size:11.5px;color:var(--muted);line-height:1.8;}
+
+/* Stats */
+.stats{display:flex;margin-top:48px;border-radius:14px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.055);background:var(--bg2);}
+.stat{flex:1;padding:24px 16px;text-align:center;border-right:1px solid rgba(255,255,255,.055);transition:background .25s;}
+.stat:last-child{border-right:none;}
+.stat:hover{background:rgba(0,245,196,.04);}
+.sn{font-family:'Orbitron',monospace;font-weight:900;font-size:26px;display:block;
+  background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sl{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:5px;}
+
+/* School badge */
+.sbadge{display:inline-flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,rgba(245,166,35,.07),rgba(255,77,109,.05));
+  border:1px solid rgba(245,166,35,.22);border-radius:50px;
+  padding:10px 22px 10px 10px;margin-top:38px;font-size:13px;
+  text-decoration:none;transition:all .25s;cursor:none;color:var(--text);}
+.sbadge:hover{border-color:rgba(245,166,35,.5);box-shadow:0 0 28px rgba(245,166,35,.2);transform:translateY(-2px);}
+.sd{width:36px;height:36px;background:linear-gradient(135deg,var(--a4),var(--a3));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.sn2{color:var(--text);font-size:13px;} .ss{color:var(--muted);font-size:10px;}
+
+/* ── FOOTER ── */
+footer{position:relative;z-index:1;text-align:center;padding:36px 40px;
+  border-top:1px solid rgba(0,245,196,.08);font-size:10px;color:var(--muted);letter-spacing:1px;}
+footer .gtext{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a6));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
+
+/* Reveal animation */
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.rev{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.rev.vis{opacity:1;transform:translateY(0);}
+
+/* Modal */
+.mo{position:fixed;inset:0;z-index:500;background:rgba(2,4,14,.92);backdrop-filter:blur(18px);
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s;}
+.mo.open{opacity:1;pointer-events:all;}
+.mbox{background:var(--bg3);border:1px solid var(--b2);border-radius:18px;padding:38px 34px;
+  max-width:600px;width:92%;max-height:82vh;overflow-y:auto;position:relative;
+  transform:translateY(22px) scale(.97);transition:transform .3s;
+  box-shadow:0 40px 80px rgba(0,0,0,.8);}
+.mo.open .mbox{transform:translateY(0) scale(1);}
+.mclose{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);color:var(--muted);width:32px;height:32px;
+  border-radius:8px;font-size:16px;cursor:none;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.mclose:hover{background:rgba(255,77,109,.18);color:var(--a3);}
+.mtag{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;
+  padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:14px;}
+.mtitle{font-family:'Orbitron',monospace;font-weight:900;font-size:26px;line-height:1.1;margin-bottom:16px;}
+.mlead{font-size:13px;color:var(--muted);line-height:1.82;margin-bottom:22px;}
+.mfacts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px;}
+.mf{background:rgba(255,255,255,.03);border:1px solid var(--b1);border-radius:8px;padding:12px 14px;}
+.mfl{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.mfv{font-size:13px;color:var(--text);font-weight:700;}
+.mlink{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:8px;
+  font-size:12px;font-weight:700;text-decoration:none;cursor:none;transition:all .22s;}
+.mlink:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.4);}
+
+@media(max-width:700px){
+  nav{padding:0 12px;gap:3px;} .nav-btns{display:none;}
+  .hero{padding:98px 18px 56px;} .hero-name{font-size:clamp(28px,8vw,50px);}
+  .sec{padding:56px 18px;} .btns{flex-direction:column;} .btn{width:100%;justify-content:center;}
+  .modal{padding:22px 16px;} .mfacts{grid-template-columns:1fr;}
+  .stats{flex-direction:column;} .stat{border-right:none;border-bottom:1px solid rgba(255,255,255,.055);}
+  .stat:last-child{border-bottom:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- BMW CAR CURSOR -->
+<svg id="bmw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 52">
+  <!-- Shadow -->
+  <ellipse cx="55" cy="49" rx="44" ry="4" fill="rgba(0,0,0,0.5)"/>
+  <!-- Body bottom -->
+  <rect x="8" y="32" width="94" height="12" rx="6" fill="#0d1020"/>
+  <!-- Body side skirt -->
+  <rect x="12" y="30" width="86" height="6" rx="3" fill="#0a0d1a" stroke="rgba(0,245,196,0.25)" stroke-width=".5"/>
+  <!-- Main body -->
+  <path d="M14,32 Q16,18 24,14 L42,11 Q55,9 68,11 L86,14 Q93,18 96,32 Z" fill="#10142a" stroke="rgba(123,97,255,0.4)" stroke-width=".8"/>
+  <!-- Roof -->
+  <path d="M30,32 Q32,20 38,16 L52,14 Q58,13 68,14 L74,16 Q78,20 78,32 Z" fill="#0d1122" stroke="rgba(0,212,255,0.3)" stroke-width=".6"/>
+  <!-- Windshield front -->
+  <path d="M62,32 Q63,23 66,20 L72,18 Q76,19 77,32 Z" fill="rgba(0,212,255,0.2)" stroke="rgba(0,212,255,0.5)" stroke-width=".5"/>
+  <!-- Windshield rear -->
+  <path d="M32,32 Q32,23 35,20 L40,18 Q44,17 48,18 L50,20 Q51,24 51,32 Z" fill="rgba(0,212,255,0.15)" stroke="rgba(0,212,255,0.4)" stroke-width=".5"/>
+  <!-- BMW Kidney grille front -->
+  <rect x="90" y="26" width="7" height="9" rx="3" fill="#0a0f1e" stroke="rgba(0,245,196,0.7)" stroke-width=".8"/>
+  <line x1="93.5" y1="26" x2="93.5" y2="35" stroke="rgba(0,245,196,0.5)" stroke-width=".7"/>
+  <!-- Front headlight - DRL -->
+  <path d="M90,22 Q96,21 100,25 Q96,23 90,23 Z" fill="#f5a623" opacity=".9"/>
+  <ellipse cx="97" cy="24" rx="5" ry="3" fill="rgba(245,166,35,0.15)" stroke="#f5a623" stroke-width=".6"/>
+  <ellipse cx="97" cy="24" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.8)"/>
+  <!-- Rear tail light -->
+  <ellipse cx="10" cy="27" rx="5" ry="3.5" fill="rgba(255,77,109,0.3)" stroke="var(--a3)" stroke-width=".6"/>
+  <ellipse cx="10" cy="27" rx="2.5" ry="1.8" fill="#ff4d6d" opacity=".7"/>
+  <!-- Front wheel -->
+  <circle cx="78" cy="42" r="9" fill="#070a18" stroke="rgba(123,97,255,0.7)" stroke-width="1.5"/>
+  <circle cx="78" cy="42" r="6" fill="#0d1020" stroke="rgba(0,245,196,0.4)" stroke-width=".8"/>
+  <circle cx="78" cy="42" r="3" fill="#12192e" stroke="rgba(0,245,196,0.6)" stroke-width=".6"/>
+  <circle cx="78" cy="42" r="1.2" fill="var(--a1)"/>
+  <!-- Wheel spokes front -->
+  <line x1="78" y1="36" x2="78" y2="38" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
+  <line x1="78" y1="46" x2="78" y2="48" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
+  <line x1="72" y1="42" x2="74" y2="42" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
+  <line x1="82" y1="42" x2="84" y2="42" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
+  <!-- Rear wheel -->
+  <circle cx="30" cy="42" r="9" fill="#070a18" stroke="rgba(123,97,255,0.7)" stroke-width="1.5"/>
+  <circle cx="30" cy="42" r="6" fill="#0d1020" stroke="rgba(0,245,196,0.4)" stroke-width=".8"/>
+  <circle cx="30" cy="42" r="3" fill="#12192e" stroke="rgba(0,245,196,0.6)" stroke-width=".6"/>
+  <circle cx="30" cy="42" r="1.2" fill="var(--a1)"/>
+  <!-- Wheel spokes rear -->
+  <line x1="30" y1="36" x2="30" y2="38" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
+  <line x1="30" y1="46" x2="30" y2="48" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
+  <line x1="24" y1="42" x2="26" y2="42" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
+  <line x1="34" y1="42" x2="36" y2="42" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
+  <!-- BMW roundel on hood -->
+  <circle cx="55" cy="22" r="7" fill="none" stroke="rgba(0,245,196,0.6)" stroke-width="1"/>
+  <line x1="55" y1="15" x2="55" y2="29" stroke="rgba(0,245,196,0.5)" stroke-width=".7"/>
+  <line x1="48" y1="22" x2="62" y2="22" stroke="rgba(0,245,196,0.5)" stroke-width=".7"/>
+  <path d="M48,15 Q55,17 55,22 Q48,22 48,15" fill="rgba(0,245,196,0.15)"/>
+  <path d="M55,22 Q62,22 62,15 Q55,17 55,22" fill="rgba(123,97,255,0.15)"/>
+  <!-- Speed trail lines from back -->
+  <line x1="0" y1="25" x2="12" y2="25" stroke="var(--a1)" stroke-width="1" opacity=".55" stroke-dasharray="3 3">
+    <animate attributeName="x1" values="12;0;12" dur="1s" repeatCount="indefinite"/>
+  </line>
+  <line x1="0" y1="29" x2="10" y2="29" stroke="var(--a2)" stroke-width=".8" opacity=".4" stroke-dasharray="2 4">
+    <animate attributeName="x1" values="10;0;10" dur=".8s" repeatCount="indefinite"/>
+  </line>
+  <line x1="0" y1="33" x2="14" y2="33" stroke="var(--a3)" stroke-width=".6" opacity=".3" stroke-dasharray="4 2">
+    <animate attributeName="x1" values="14;0;14" dur="1.2s" repeatCount="indefinite"/>
+  </line>
+  <!-- Exhaust puff -->
+  <circle cx="7" cy="37" r="2" fill="rgba(200,200,220,0.15)">
+    <animate attributeName="r" values="1;3;1" dur=".6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.2;0.05;0.2" dur=".6s" repeatCount="indefinite"/>
+  </circle>
+</svg>
+
+<canvas id="trail-canvas"></canvas>
+<canvas id="particle-canvas"></canvas>
+
+<div class="o1 orb"></div><div class="o2 orb"></div><div class="o3 orb"></div>
+<div class="o4 orb"></div><div class="o5 orb"></div><div class="o6 orb"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">R·AFI</div>
+  <div class="nav-btns">
+    <button class="nb a1h" onclick="openModal('ai')" style="cursor:none"><span class="d c1"></span>About AI</button>
+    <button class="nb a2h" onclick="openModal('robotics')" style="cursor:none"><span class="d c2"></span>About Robotics</button>
+    <button class="nb a3h" onclick="openModal('mechatronics')" style="cursor:none"><span class="d c3"></span>About Mechatronics</button>
+    <a class="nb a4h" href="http://www.mic.edu.bd" target="_blank" style="cursor:none"><span class="d c4"></span>About My School</a>
+  </div>
+  <div class="cw">
+    <button class="cbtn" onclick="toggleContact()" style="cursor:none">✉ Contact</button>
+    <div class="cdrop" id="cdrop">
+      <a href="https://wa.me/8801764258407" target="_blank" class="wa">
+        <div class="ci">💬</div>
+        <div><div>Contact via WhatsApp</div><div class="cs">+880 1764 258407</div></div>
+      </a>
+      <a href="mailto:alfahmidrafi12@gmail.com" class="em">
+        <div class="ci">📧</div>
+        <div><div>Send an Email</div><div class="cs">alfahmidrafi12@gmail.com</div></div>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="av-wrap">
+    <div class="av-outer">
+      <div class="av-inner"><span>AFR</span></div>
+    </div>
+  </div>
+  <div class="eyebrow">Mohanagar Ideal School · Class VIII · Dhaka, BD</div>
+  <h1 class="hero-name">
+    <span class="glitch" data-text="Al Fahmid">Al Fahmid</span><br>
+    <span class="ng">Rafi.</span>
+  </h1>
+  <p class="hero-sub">
+    আমি <strong>AI দিয়ে এমন ডিজাইন বানাই</strong> যা professional developer-রাও ভাবতে পারে না।<br>
+    Robotics, AI &amp; Mechatronics নিয়ে কাজ করাই আমার passion<span class="tc">_</span>
+  </p>
+  <div class="tags">
+    <span class="tag t1">🧠 AI Specialist</span>
+    <span class="tag t2">⚡ Robotics</span>
+    <span class="tag t3">🔧 Mechatronics</span>
+    <span class="tag t4">✦ Creative Designer</span>
+    <span class="tag t5">🚀 Future Builder</span>
+  </div>
+  <div class="btns">
+    <a href="https://misc-ai-bd.lovable.app" target="_blank" class="btn bp">See Recent Projects <span class="arr">→</span></a>
+    <a href="https://www.youtube.com/channel/UCxBGeBX9PIfIrd7N9fpR7UA" target="_blank" class="btn bs">YouTube Channel <span class="arr">→</span></a>
+  </div>
+  <div class="scroll-hint"><div class="sline"></div>Scroll to explore</div>
+</section>
+
+<!-- INTERESTS -->
+<section class="sec">
+  <div class="sec-lbl rev">// Interests &amp; Expertise</div>
+  <div class="grid">
+    <div class="card rev" style="transition-delay:.04s"><span class="ci2">🧠</span><div class="ct">Artificial Intelligence</div><div class="cd">AI tools ব্যবহার করে professional-level কাজ করা — এটাই Rafi-র সবচেয়ে বড় শক্তি।</div></div>
+    <div class="card rev" style="transition-delay:.10s"><span class="ci2">🤖</span><div class="ct">Robotics</div><div class="cd">Machine learning ও physical computing মিলিয়ে smart robot তৈরির দিকে আগ্রহ।</div></div>
+    <div class="card rev" style="transition-delay:.16s"><span class="ci2">⚙️</span><div class="ct">Mechatronics</div><div class="cd">Electronics, mechanics আর software — সব একসাথে নিয়ে কাজ করার passion।</div></div>
+    <div class="card rev" style="transition-delay:.22s"><span class="ci2">🎨</span><div class="ct">AI Design</div><div class="cd">AI ব্যবহার করে এমন ডিজাইন যা developer-দের ছাড়িয়ে যায় — এটাই লক্ষ্য।</div></div>
+  </div>
+
+  <div class="stats rev" style="transition-delay:.1s">
+    <div class="stat"><span class="sn" data-target="14">0</span><div class="sl">Age</div></div>
+    <div class="stat"><span class="sn" data-target="8">0</span><div class="sl">Class</div></div>
+    <div class="stat"><span class="sn">∞</span><div class="sl">Curiosity</div></div>
+    <div class="stat"><span class="sn">3+</span><div class="sl">Fields</div></div>
+  </div>
+
+  <a href="http://www.mic.edu.bd" target="_blank" class="sbadge rev" style="transition-delay:.14s">
+    <div class="sd">🏫</div>
+    <div><div class="sn2">Mohanagar Ideal School</div><div class="ss">Class VIII · Dhaka, BD · mic.edu.bd ↗</div></div>
+  </a>
+</section>
+
+<footer>Built with passion by <span class="gtext">Al Fahmid Rafi</span> · 2025 · Dhaka, Bangladesh</footer>
+
+<!-- MODAL -->
+<div class="mo" id="mo" onclick="closeOut(event)">
+  <div class="mbox"><button class="mclose" onclick="closeModal()">✕</button><div id="mc"></div></div>
+</div>
+
+<script>
+/* MULTICOLOR PARTICLES */
+(function(){
+  const c=document.getElementById('particle-canvas'),ctx=c.getContext('2d');
+  function rsz(){c.width=innerWidth;c.height=innerHeight;}rsz();addEventListener('resize',rsz);
+  const cols=['0,245,196','123,97,255','255,77,109','245,166,35','0,212,255','255,97,216'];
+  const pts=Array.from({length:75},()=>({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+    r:Math.random()*1.8+.3,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,
+    col:cols[Math.floor(Math.random()*cols.length)],a:Math.random()*.28+.06
+  }));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;
+      if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${p.col},${p.a})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }draw();
+})();
+
+/* TRAIL */
+(function(){
+  const c=document.getElementById('trail-canvas'),ctx=c.getContext('2d');
+  function rsz(){c.width=innerWidth;c.height=innerHeight;}rsz();addEventListener('resize',rsz);
+  const trail=[];
+  const cols=[[0,245,196],[123,97,255],[255,77,109],[245,166,35],[0,212,255],[255,97,216]];
+  window._addTrail=function(x,y){
+    const col=cols[Math.floor(Math.random()*cols.length)];
+    trail.push({x,y,col,life:1});
+    if(trail.length>35)trail.shift();
+  };
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    trail.forEach((p,i)=>{
+      const a=((i+1)/trail.length)*.5;
+      const r=2.2*((i+1)/trail.length);
+      ctx.beginPath();ctx.arc(p.x,p.y+18,r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${p.col.join(',')},${a})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }draw();
+})();
+
+/* BMW CURSOR */
+const bmw=document.getElementById('bmw');
+let mx=0,my=0,px=0;
+addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  const dx=mx-px;
+  const tilt=Math.max(-10,Math.min(10,dx*.5));
+  bmw.style.left=mx+'px';bmw.style.top=my+'px';
+  bmw.style.transform=`translate(-50%,-65%) rotate(${tilt}deg)`;
+  window._addTrail(mx,my);px=mx;
+});
+document.querySelectorAll('a,button,.card,.tag,.sbadge').forEach(el=>{
+  el.addEventListener('mouseenter',()=>bmw.classList.add('hover'));
+  el.addEventListener('mouseleave',()=>bmw.classList.remove('hover'));
+});
+
+/* CONTACT */
+function toggleContact(){document.getElementById('cdrop').classList.toggle('open');}
+addEventListener('click',e=>{if(!document.querySelector('.cw').contains(e.target))document.getElementById('cdrop').classList.remove('open');});
+
+/* REVEAL */
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');ro.unobserve(e.target);}}),{threshold:.1});
+document.querySelectorAll('.rev').forEach(el=>ro.observe(el));
+
+/* COUNT UP */
+function countUp(el,t){let s=null;(function st(ts){if(!s)s=ts;const p=Math.min((ts-s)/1300,1);el.textContent=Math.floor(p*t);if(p<1)requestAnimationFrame(st);else el.textContent=t;})(performance.now());}
+const no=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&e.target.dataset.target){countUp(e.target,+e.target.dataset.target);no.unobserve(e.target);}}),{threshold:.5});
+document.querySelectorAll('.sn[data-target]').forEach(el=>no.observe(el));
+
+/* MODALS */
+const MD={
+  ai:{tag:'Artificial Intelligence',tc:'rgba(0,245,196,0.12)',tt:'#00f5c4',
+    title:'What is AI?',
+    lead:'Artificial Intelligence (AI) মানে হলো এমন computer system যা মানুষের মতো চিন্তা করতে, শিখতে এবং সিদ্ধান্ত নিতে পারে। Machine Learning, Deep Learning, NLP — এগুলো সব AI-এর অংশ।',
+    facts:[{l:'Founded',v:'1950s'},{l:'Key Tech',v:'ML & Neural Nets'},{l:'Used In',v:'ChatGPT, Tesla, Siri'},{l:'Future',v:'Every Industry'}],
+    lk:'Explore AI →',lh:'https://en.wikipedia.org/wiki/Artificial_intelligence',lc:'#00f5c4',lb:'rgba(0,245,196,0.1)',
+    ex:'AI এখন healthcare থেকে art, music, coding সব জায়গায় revolution আনছে। Rafi এই technology দিয়ে এমন কাজ করে যা professional developers-রাও পারে না।'},
+  robotics:{tag:'Robotics',tc:'rgba(123,97,255,0.12)',tt:'#a78bfa',
+    title:'What is Robotics?',
+    lead:'Robotics হলো engineering-এর সেই branch যেখানে physical machines বানানো হয় যেগুলো automatically কাজ করতে পারে। এটা AI, mechanical engineering এবং electronics-এর combination।',
+    facts:[{l:'Origin',v:'1950s–60s'},{l:'Types',v:'Industrial, AI Robots'},{l:'Language',v:'Python, C++, ROS'},{l:'Future',v:'Autonomous Everything'}],
+    lk:'Explore Robotics →',lh:'https://en.wikipedia.org/wiki/Robotics',lc:'#a78bfa',lb:'rgba(123,97,255,0.1)',
+    ex:'Modern robots surgery করছে, Mars-এ ঘুরছে, factory-তে কাজ করছে। Rafi-র স্বপ্ন হলো AI-powered robot তৈরি করা যা সত্যিকারের সমস্যা solve করবে।'},
+  mechatronics:{tag:'Mechatronics',tc:'rgba(255,77,109,0.12)',tt:'#fb7185',
+    title:'What is Mechatronics?',
+    lead:'Mechatronics হলো Mechanics + Electronics + Computing-এর সমন্বয়। এটা এমন field যেখানে smart machines তৈরি হয় — যেগুলো শুধু চলেই না, বুদ্ধিমানভাবে কাজ করে।',
+    facts:[{l:'Born',v:'1969, Japan'},{l:'Mix of',v:'Mech+Elec+SW'},{l:'Examples',v:'Drones, CNC, IoT'},{l:'Scope',v:'Massive & Growing'}],
+    lk:'Explore Mechatronics →',lh:'https://en.wikipedia.org/wiki/Mechatronics',lc:'#fb7185',lb:'rgba(255,77,109,0.1)',
+    ex:'Mechatronics engineers design করেন self-driving cars, industrial robots, smart home devices। এই field future-এর সবচেয়ে exciting career paths-এর একটা।'}
+};
+function openModal(k){
+  const d=MD[k];
+  document.getElementById('mc').innerHTML=`
+    <div class="mtag" style="background:${d.tc};color:${d.tt}">${d.tag}</div>
+    <div class="mtitle">${d.title}</div>
+    <div class="mlead">${d.lead}</div>
+    <div class="mfacts">${d.facts.map(f=>`<div class="mf"><div class="mfl">${f.l}</div><div class="mfv">${f.v}</div></div>`).join('')}</div>
+    <p style="font-size:12px;color:var(--muted);line-height:1.82;margin-bottom:22px">${d.ex}</p>
+    <a href="${d.lh}" target="_blank" class="mlink" style="background:${d.lb};color:${d.lc};border:1px solid ${d.lc}44">${d.lk}</a>`;
+  document.getElementById('mo').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('mo').classList.remove('open');document.body.style.overflow='';}
+function closeOut(e){if(e.target===document.getElementById('mo'))closeModal();}
+addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+</script>
+</body>
+</html>
