@@ -9,8 +9,9 @@
 :root{
   --bg:#02040e;--bg2:#070b18;--bg3:#0b1020;
   --a1:#00f5c4;--a2:#7b61ff;--a3:#ff4d6d;--a4:#f5a623;--a5:#00d4ff;--a6:#ff61d8;
-  --text:#eef0ff;--muted:#6b7a99;
+  --text:#eef0ff;--muted:#6b7a99;--muted2:#475068;
   --b1:rgba(0,245,196,0.12);--b2:rgba(123,97,255,0.14);
+  --glass:rgba(7,11,24,0.55);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -22,7 +23,6 @@ body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;m
 
 /* ── TRAIL CANVAS ── */
 #trail-canvas{position:fixed;inset:0;z-index:9990;pointer-events:none;}
-
 /* ── PARTICLE CANVAS ── */
 #particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
@@ -48,10 +48,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 28px;
   display:flex;align-items:center;justify-content:space-between;gap:6px;
   backdrop-filter:blur(32px) saturate(1.6);background:rgba(2,4,14,.82);
   border-bottom:1px solid rgba(0,245,196,.09);}
-
 .nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:15px;letter-spacing:2px;flex-shrink:0;
   background:linear-gradient(135deg,#00f5c4,#7b61ff,#ff61d8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-
 .nav-btns{display:flex;gap:4px;flex-wrap:wrap;}
 .nb{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:6px;
   border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);
@@ -88,25 +86,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 28px;
 /* ── HERO ── */
 .hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;
   justify-content:center;padding:110px 44px 80px;max-width:960px;margin:0 auto;}
-
 .eyebrow{display:flex;align-items:center;gap:10px;font-size:10.5px;color:var(--a1);
   margin-bottom:20px;letter-spacing:3px;text-transform:uppercase;
   opacity:0;animation:fu .8s ease forwards .3s;}
 .eyebrow::before{content:'';width:28px;height:1px;background:linear-gradient(90deg,var(--a1),var(--a2));}
 
-/* Avatar with rotating rainbow border */
+/* Avatar */
 .av-wrap{margin-bottom:28px;opacity:0;animation:fu .8s ease forwards .15s;}
 .av-outer{width:100px;height:100px;border-radius:50%;padding:3px;
   background:conic-gradient(from 0deg,var(--a1),var(--a2),var(--a3),var(--a4),var(--a5),var(--a6),var(--a1));
   animation:spinBorder 3s linear infinite;}
 @keyframes spinBorder{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-.av{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#0d1428,#1a1040);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Orbitron',monospace;font-weight:900;font-size:22px;
-  background-clip:padding-box;
-  color:transparent;background:linear-gradient(135deg,var(--a2),var(--a1)) text;
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-/* fallback for av text */
 .av-inner{width:94px;height:94px;border-radius:50%;background:linear-gradient(135deg,#0d1428,#110d2e);
   display:flex;align-items:center;justify-content:center;
   font-family:'Orbitron',monospace;font-weight:900;font-size:20px;letter-spacing:1px;}
@@ -120,18 +110,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 28px;
   background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
   animation:gshift 4s ease infinite;}
 @keyframes gshift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
 .glitch{position:relative;display:inline-block;}
 .glitch::after{content:attr(data-text);position:absolute;top:0;left:3px;
   background:linear-gradient(135deg,var(--a3),var(--a6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
   clip-path:polygon(0 25%,100% 25%,100% 50%,0 50%);opacity:0;animation:glitch 7s infinite;}
 @keyframes glitch{0%,91%,97%,100%{opacity:0;transform:translateX(0)}93%{opacity:.45;transform:translateX(-5px)}95%{opacity:.2;transform:translateX(4px)}}
 
-.hero-sub{margin-top:22px;font-size:clamp(13px,1.8vw,17px);color:var(--muted);
+/* Typing line */
+.typeline{margin-top:18px;font-size:clamp(14px,2.2vw,20px);font-family:'Orbitron',monospace;font-weight:700;
+  letter-spacing:1px;opacity:0;animation:fu .8s ease forwards .6s;min-height:1.4em;}
+.typeline .prefix{color:var(--muted);}
+#typed{background:linear-gradient(135deg,var(--a1),var(--a5));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.tcursor{color:var(--a1);animation:blink 1s step-end infinite;}
+
+.hero-sub{margin-top:18px;font-size:clamp(13px,1.8vw,17px);color:var(--muted);
   line-height:1.75;max-width:560px;opacity:0;animation:fu .8s ease forwards .7s;}
 .hero-sub strong{color:var(--text);font-weight:400;}
-.tc{color:var(--a1);animation:blink 1s step-end infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
 /* Tags */
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;opacity:0;animation:fu .8s ease forwards .9s;}
@@ -173,11 +167,38 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 28px;
 
 /* ── SECTION ── */
 .sec{position:relative;z-index:1;padding:80px 44px;max-width:960px;margin:0 auto;}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:40px;flex-wrap:wrap;}
+.sec-num{font-family:'Orbitron',monospace;font-weight:900;font-size:13px;
+  color:var(--a2);opacity:.5;letter-spacing:2px;}
 .sec-lbl{font-size:10px;color:var(--a1);letter-spacing:3px;text-transform:uppercase;
-  margin-bottom:34px;display:flex;align-items:center;gap:12px;font-family:'Orbitron',monospace;}
-.sec-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--b1),transparent);}
+  display:flex;align-items:center;gap:12px;font-family:'Orbitron',monospace;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--b1),transparent);min-width:40px;}
+.sec-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(22px,4vw,34px);
+  line-height:1.15;margin-top:8px;width:100%;}
+.sec-title .accent{background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 
-/* Cards */
+/* ── ABOUT (terminal) ── */
+.terminal{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:14px;
+  overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.4);}
+.term-bar{display:flex;align-items:center;gap:8px;padding:12px 18px;
+  background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05);}
+.term-dot{width:12px;height:12px;border-radius:50%;}
+.term-dot.r{background:#ff5f57;} .term-dot.y{background:#febc2e;} .term-dot.g{background:#28c840;}
+.term-title{font-size:10px;color:var(--muted);margin-left:8px;letter-spacing:1px;}
+.term-body{padding:24px 22px;font-size:13px;line-height:1.9;}
+.term-body .ln{display:flex;gap:8px;}
+.term-body .prompt{color:var(--a1);}
+.term-body .cmd{color:var(--a5);}
+.term-body .out{color:var(--muted);}
+.term-body .key{color:var(--a2);}
+.term-body .val{color:var(--a1);}
+.term-body .str{color:var(--a4);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+.about-item{display:flex;flex-direction:column;gap:2px;}
+.about-item .k{font-size:9px;color:var(--muted2);letter-spacing:1.5px;text-transform:uppercase;}
+.about-item .v{font-size:13px;color:var(--text);}
+
+/* ── CARDS ── */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:16px;}
 .card{background:var(--bg2);border:1px solid rgba(255,255,255,.055);border-radius:14px;
   padding:26px 22px;transition:all .32s;position:relative;overflow:hidden;cursor:none;}
@@ -189,13 +210,84 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 28px;
   opacity:0;transition:opacity .32s;}
 .card:hover::before{transform:scaleX(1);}
 .card:hover::after{opacity:1;}
-.card:hover{border-color:rgba(0,245,196,.18);transform:translateY(-7px) rotate(.3deg);
+.card:hover{border-color:rgba(0,245,196,.18);transform:translateY(-7px);
   box-shadow:0 32px 64px rgba(0,0,0,.45),0 0 30px rgba(0,245,196,.07);}
 .ci2{font-size:30px;margin-bottom:14px;display:block;}
 .ct{font-family:'Orbitron',monospace;font-weight:700;font-size:14px;margin-bottom:8px;}
 .cd{font-size:11.5px;color:var(--muted);line-height:1.8;}
 
-/* Stats */
+/* ── SKILLS ── */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+.skill{background:var(--bg2);border:1px solid rgba(255,255,255,.055);border-radius:12px;padding:18px 20px;transition:all .25s;}
+.skill:hover{border-color:rgba(123,97,255,.2);transform:translateX(4px);}
+.skill-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.skill-name{font-family:'Orbitron',monospace;font-weight:700;font-size:12px;}
+.skill-pct{font-size:11px;color:var(--a1);font-weight:700;}
+.skill-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden;}
+.skill-fill{height:100%;border-radius:3px;width:0;transition:width 1.4s cubic-bezier(.22,1,.36,1);}
+.sf1{background:linear-gradient(90deg,var(--a1),var(--a5));}
+.sf2{background:linear-gradient(90deg,var(--a2),var(--a6));}
+.sf3{background:linear-gradient(90deg,var(--a3),var(--a4));}
+.sf4{background:linear-gradient(90deg,var(--a4),var(--a1));}
+.sf5{background:linear-gradient(90deg,var(--a5),var(--a2));}
+.sf6{background:linear-gradient(90deg,var(--a6),var(--a3));}
+
+/* ── PROJECTS ── */
+.proj-card{background:var(--bg2);border:1px solid rgba(255,255,255,.055);border-radius:14px;
+  padding:28px 24px;transition:all .35s;position:relative;overflow:hidden;cursor:none;text-decoration:none;color:var(--text);
+  display:flex;flex-direction:column;gap:14px;}
+.proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  transform:scaleX(0);transition:transform .4s;transform-origin:left;}
+.proj-card:hover::before{transform:scaleX(1);}
+.proj-card:hover{transform:translateY(-6px);box-shadow:0 28px 56px rgba(0,0,0,.4);}
+.pc1::before{background:linear-gradient(90deg,var(--a1),var(--a5));}
+.pc2::before{background:linear-gradient(90deg,var(--a2),var(--a6));}
+.pc3::before{background:linear-gradient(90deg,var(--a3),var(--a4));}
+.pc1:hover{border-color:rgba(0,245,196,.2);box-shadow:0 28px 56px rgba(0,0,0,.4),0 0 30px rgba(0,245,196,.08);}
+.pc2:hover{border-color:rgba(123,97,255,.2);box-shadow:0 28px 56px rgba(0,0,0,.4),0 0 30px rgba(123,97,255,.08);}
+.pc3:hover{border-color:rgba(255,77,109,.2);box-shadow:0 28px 56px rgba(0,0,0,.4),0 0 30px rgba(255,77,109,.08);}
+.proj-icon{font-size:32px;}
+.proj-title{font-family:'Orbitron',monospace;font-weight:700;font-size:15px;}
+.proj-desc{font-size:12px;color:var(--muted);line-height:1.8;flex:1;}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.proj-tag{font-size:9px;padding:4px 10px;border-radius:12px;letter-spacing:.5px;
+  background:rgba(255,255,255,.04);color:var(--muted);border:1px solid rgba(255,255,255,.06);}
+.proj-link{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.5px;}
+.pc1 .proj-link{color:var(--a1);} .pc2 .proj-link{color:#a78bfa;} .pc3 .proj-link{color:#fb7185;}
+.proj-link .arr{transition:transform .2s;} .proj-card:hover .proj-link .arr{transform:translateX(4px);}
+
+/* ── JOURNEY / TIMELINE ── */
+.timeline{position:relative;padding-left:32px;}
+.timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,var(--a1),var(--a2),var(--a3),var(--a4),transparent);}
+.tl-item{position:relative;padding-bottom:36px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-dot{position:absolute;left:-32px;top:4px;width:16px;height:16px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--a1);z-index:1;}
+.tl-item:nth-child(2) .tl-dot{border-color:var(--a2);}
+.tl-item:nth-child(3) .tl-dot{border-color:var(--a3);}
+.tl-item:nth-child(4) .tl-dot{border-color:var(--a4);}
+.tl-year{font-family:'Orbitron',monospace;font-weight:900;font-size:13px;
+  background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:4px;}
+.tl-item:nth-child(2) .tl-year{background:linear-gradient(135deg,var(--a2),var(--a6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.tl-item:nth-child(3) .tl-year{background:linear-gradient(135deg,var(--a3),var(--a4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.tl-item:nth-child(4) .tl-year{background:linear-gradient(135deg,var(--a4),var(--a1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.tl-title{font-family:'Orbitron',monospace;font-weight:700;font-size:14px;margin-bottom:6px;}
+.tl-desc{font-size:12px;color:var(--muted);line-height:1.8;}
+
+/* ── QUOTE ── */
+.quote-sec{text-align:center;padding:60px 44px;max-width:720px;margin:0 auto;position:relative;z-index:1;}
+.quote-mark{font-family:'Orbitron',monospace;font-size:60px;line-height:1;
+  background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  opacity:.3;margin-bottom:8px;}
+.quote-text{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(18px,3vw,26px);
+  line-height:1.5;letter-spacing:-.5px;}
+.quote-text .hl{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a6));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.quote-author{margin-top:18px;font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+
+/* ── STATS ── */
 .stats{display:flex;margin-top:48px;border-radius:14px;overflow:hidden;
   border:1px solid rgba(255,255,255,.055);background:var(--bg2);}
 .stat{flex:1;padding:24px 16px;text-align:center;border-right:1px solid rgba(255,255,255,.055);transition:background .25s;}
@@ -216,14 +308,34 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;padding:0 28px;
   border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;}
 .sn2{color:var(--text);font-size:13px;} .ss{color:var(--muted);font-size:10px;}
 
+/* ── CONTACT CTA ── */
+.contact-cta{text-align:center;padding:60px 44px;max-width:700px;margin:0 auto;position:relative;z-index:1;}
+.contact-cta h2{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(24px,4.5vw,38px);
+  line-height:1.15;margin-bottom:16px;}
+.contact-cta p{font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;}
+.contact-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.clink{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;border-radius:10px;
+  text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.4px;transition:all .25s;cursor:none;border:none;}
+.clink:hover{transform:translateY(-3px);}
+.cl-wa{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;}
+.cl-wa:hover{box-shadow:0 10px 30px rgba(37,211,102,.35);}
+.cl-em{background:linear-gradient(135deg,var(--a1),var(--a2));color:#050810;}
+.cl-em:hover{box-shadow:0 10px 30px rgba(0,245,196,.35);}
+.cl-yt{background:linear-gradient(135deg,#ff0000,#cc0000);color:#fff;}
+.cl-yt:hover{box-shadow:0 10px 30px rgba(255,0,0,.25);}
+
 /* ── FOOTER ── */
 footer{position:relative;z-index:1;text-align:center;padding:36px 40px;
   border-top:1px solid rgba(0,245,196,.08);font-size:10px;color:var(--muted);letter-spacing:1px;}
 footer .gtext{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a6));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
+footer .flinks{display:flex;gap:16px;justify-content:center;margin-bottom:14px;flex-wrap:wrap;}
+footer .flinks a{color:var(--muted);text-decoration:none;font-size:10px;letter-spacing:1px;transition:color .2s;cursor:none;}
+footer .flinks a:hover{color:var(--a1);}
 
 /* Reveal animation */
 @keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 .rev{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
 .rev.vis{opacity:1;transform:translateY(0);}
 
@@ -256,9 +368,12 @@ footer .gtext{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a6));
   nav{padding:0 12px;gap:3px;} .nav-btns{display:none;}
   .hero{padding:98px 18px 56px;} .hero-name{font-size:clamp(28px,8vw,50px);}
   .sec{padding:56px 18px;} .btns{flex-direction:column;} .btn{width:100%;justify-content:center;}
-  .modal{padding:22px 16px;} .mfacts{grid-template-columns:1fr;}
+  .mbox{padding:28px 20px;} .mfacts{grid-template-columns:1fr;}
   .stats{flex-direction:column;} .stat{border-right:none;border-bottom:1px solid rgba(255,255,255,.055);}
   .stat:last-child{border-bottom:none;}
+  .about-grid{grid-template-columns:1fr;}
+  .skills-grid{grid-template-columns:1fr;}
+  .timeline{padding-left:28px;}
 }
 </style>
 </head>
@@ -266,57 +381,41 @@ footer .gtext{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a6));
 
 <!-- BMW CAR CURSOR -->
 <svg id="bmw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 52">
-  <!-- Shadow -->
   <ellipse cx="55" cy="49" rx="44" ry="4" fill="rgba(0,0,0,0.5)"/>
-  <!-- Body bottom -->
   <rect x="8" y="32" width="94" height="12" rx="6" fill="#0d1020"/>
-  <!-- Body side skirt -->
   <rect x="12" y="30" width="86" height="6" rx="3" fill="#0a0d1a" stroke="rgba(0,245,196,0.25)" stroke-width=".5"/>
-  <!-- Main body -->
   <path d="M14,32 Q16,18 24,14 L42,11 Q55,9 68,11 L86,14 Q93,18 96,32 Z" fill="#10142a" stroke="rgba(123,97,255,0.4)" stroke-width=".8"/>
-  <!-- Roof -->
   <path d="M30,32 Q32,20 38,16 L52,14 Q58,13 68,14 L74,16 Q78,20 78,32 Z" fill="#0d1122" stroke="rgba(0,212,255,0.3)" stroke-width=".6"/>
-  <!-- Windshield front -->
   <path d="M62,32 Q63,23 66,20 L72,18 Q76,19 77,32 Z" fill="rgba(0,212,255,0.2)" stroke="rgba(0,212,255,0.5)" stroke-width=".5"/>
-  <!-- Windshield rear -->
   <path d="M32,32 Q32,23 35,20 L40,18 Q44,17 48,18 L50,20 Q51,24 51,32 Z" fill="rgba(0,212,255,0.15)" stroke="rgba(0,212,255,0.4)" stroke-width=".5"/>
-  <!-- BMW Kidney grille front -->
   <rect x="90" y="26" width="7" height="9" rx="3" fill="#0a0f1e" stroke="rgba(0,245,196,0.7)" stroke-width=".8"/>
   <line x1="93.5" y1="26" x2="93.5" y2="35" stroke="rgba(0,245,196,0.5)" stroke-width=".7"/>
-  <!-- Front headlight - DRL -->
   <path d="M90,22 Q96,21 100,25 Q96,23 90,23 Z" fill="#f5a623" opacity=".9"/>
   <ellipse cx="97" cy="24" rx="5" ry="3" fill="rgba(245,166,35,0.15)" stroke="#f5a623" stroke-width=".6"/>
   <ellipse cx="97" cy="24" rx="2.5" ry="1.5" fill="rgba(255,255,255,0.8)"/>
-  <!-- Rear tail light -->
   <ellipse cx="10" cy="27" rx="5" ry="3.5" fill="rgba(255,77,109,0.3)" stroke="var(--a3)" stroke-width=".6"/>
   <ellipse cx="10" cy="27" rx="2.5" ry="1.8" fill="#ff4d6d" opacity=".7"/>
-  <!-- Front wheel -->
   <circle cx="78" cy="42" r="9" fill="#070a18" stroke="rgba(123,97,255,0.7)" stroke-width="1.5"/>
   <circle cx="78" cy="42" r="6" fill="#0d1020" stroke="rgba(0,245,196,0.4)" stroke-width=".8"/>
   <circle cx="78" cy="42" r="3" fill="#12192e" stroke="rgba(0,245,196,0.6)" stroke-width=".6"/>
   <circle cx="78" cy="42" r="1.2" fill="var(--a1)"/>
-  <!-- Wheel spokes front -->
   <line x1="78" y1="36" x2="78" y2="38" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
   <line x1="78" y1="46" x2="78" y2="48" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
   <line x1="72" y1="42" x2="74" y2="42" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
   <line x1="82" y1="42" x2="84" y2="42" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
-  <!-- Rear wheel -->
   <circle cx="30" cy="42" r="9" fill="#070a18" stroke="rgba(123,97,255,0.7)" stroke-width="1.5"/>
   <circle cx="30" cy="42" r="6" fill="#0d1020" stroke="rgba(0,245,196,0.4)" stroke-width=".8"/>
   <circle cx="30" cy="42" r="3" fill="#12192e" stroke="rgba(0,245,196,0.6)" stroke-width=".6"/>
   <circle cx="30" cy="42" r="1.2" fill="var(--a1)"/>
-  <!-- Wheel spokes rear -->
   <line x1="30" y1="36" x2="30" y2="38" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
   <line x1="30" y1="46" x2="30" y2="48" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
   <line x1="24" y1="42" x2="26" y2="42" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
   <line x1="34" y1="42" x2="36" y2="42" stroke="rgba(0,245,196,0.5)" stroke-width=".6"/>
-  <!-- BMW roundel on hood -->
   <circle cx="55" cy="22" r="7" fill="none" stroke="rgba(0,245,196,0.6)" stroke-width="1"/>
   <line x1="55" y1="15" x2="55" y2="29" stroke="rgba(0,245,196,0.5)" stroke-width=".7"/>
   <line x1="48" y1="22" x2="62" y2="22" stroke="rgba(0,245,196,0.5)" stroke-width=".7"/>
   <path d="M48,15 Q55,17 55,22 Q48,22 48,15" fill="rgba(0,245,196,0.15)"/>
   <path d="M55,22 Q62,22 62,15 Q55,17 55,22" fill="rgba(123,97,255,0.15)"/>
-  <!-- Speed trail lines from back -->
   <line x1="0" y1="25" x2="12" y2="25" stroke="var(--a1)" stroke-width="1" opacity=".55" stroke-dasharray="3 3">
     <animate attributeName="x1" values="12;0;12" dur="1s" repeatCount="indefinite"/>
   </line>
@@ -326,7 +425,6 @@ footer .gtext{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a6));
   <line x1="0" y1="33" x2="14" y2="33" stroke="var(--a3)" stroke-width=".6" opacity=".3" stroke-dasharray="4 2">
     <animate attributeName="x1" values="14;0;14" dur="1.2s" repeatCount="indefinite"/>
   </line>
-  <!-- Exhaust puff -->
   <circle cx="7" cy="37" r="2" fill="rgba(200,200,220,0.15)">
     <animate attributeName="r" values="1;3;1" dur=".6s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values="0.2;0.05;0.2" dur=".6s" repeatCount="indefinite"/>
@@ -375,9 +473,10 @@ footer .gtext{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a6));
     <span class="glitch" data-text="Al Fahmid">Al Fahmid</span><br>
     <span class="ng">Rafi.</span>
   </h1>
+  <div class="typeline"><span class="prefix">&gt;</span> <span id="typed"></span><span class="tcursor">_</span></div>
   <p class="hero-sub">
     আমি <strong>AI দিয়ে এমন ডিজাইন বানাই</strong> যা professional developer-রাও ভাবতে পারে না।<br>
-    Robotics, AI &amp; Mechatronics নিয়ে কাজ করাই আমার passion<span class="tc">_</span>
+    Robotics, AI &amp; Mechatronics নিয়ে কাজ করাই আমার passion।
   </p>
   <div class="tags">
     <span class="tag t1">🧠 AI Specialist</span>
@@ -393,30 +492,192 @@ footer .gtext{background:linear-gradient(135deg,var(--a1),var(--a2),var(--a6));
   <div class="scroll-hint"><div class="sline"></div>Scroll to explore</div>
 </section>
 
+<!-- ABOUT -->
+<section class="sec">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <div class="sec-lbl">// About Me</div>
+  </div>
+  <div class="terminal rev">
+    <div class="term-bar">
+      <div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div>
+      <span class="term-title">rafi@portfolio: ~ — zsh</span>
+    </div>
+    <div class="term-body">
+      <div class="ln"><span class="prompt">❯</span> <span class="cmd">whoami</span></div>
+      <div class="ln"><span class="out">→ <span class="str">Al Fahmid Rafi</span> — ১৪ বছরের AI enthusiast, Dhaka, Bangladesh</span></div>
+      <div class="ln" style="margin-top:10px"><span class="prompt">❯</span> <span class="cmd">cat about.txt</span></div>
+      <div class="ln"><span class="out">→ আমি বিশ্বাস করি, বয়স কখনো সীমা নয়। যখন সবাই নিয়ম মেনে চলে, আমি নতুন কিছু তৈরি করি। AI, robotics আর mechatronics — এই তিনটি জিনিস মিলিয়ে আমি এমন কিছু বানাতে চাই যা ভবিষ্যতে মানুষের জীবন বদলে দেবে।</span></div>
+      <div class="ln" style="margin-top:10px"><span class="prompt">❯</span> <span class="cmd">cat profile.json</span></div>
+      <div class="about-grid">
+        <div class="about-item"><span class="k">Name</span><span class="v">Al Fahmid Rafi</span></div>
+        <div class="about-item"><span class="k">Age</span><span class="v">14</span></div>
+        <div class="about-item"><span class="k">School</span><span class="v">Mohanagar Ideal College</span></div>
+        <div class="about-item"><span class="k">Class</span><span class="v">VIII</span></div>
+        <div class="about-item"><span class="k">Location</span><span class="v">Dhaka, Bangladesh</span></div>
+        <div class="about-item"><span class="k">Focus</span><span class="v">AI · Robotics · Design</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- INTERESTS -->
 <section class="sec">
-  <div class="sec-lbl rev">// Interests &amp; Expertise</div>
-  <div class="grid">
-    <div class="card rev" style="transition-delay:.04s"><span class="ci2">🧠</span><div class="ct">Artificial Intelligence</div><div class="cd">AI tools ব্যবহার করে professional-level কাজ করা — এটাই Rafi-র সবচেয়ে বড় শক্তি।</div></div>
-    <div class="card rev" style="transition-delay:.10s"><span class="ci2">🤖</span><div class="ct">Robotics</div><div class="cd">Machine learning ও physical computing মিলিয়ে smart robot তৈরির দিকে আগ্রহ।</div></div>
-    <div class="card rev" style="transition-delay:.16s"><span class="ci2">⚙️</span><div class="ct">Mechatronics</div><div class="cd">Electronics, mechanics আর software — সব একসাথে নিয়ে কাজ করার passion।</div></div>
-    <div class="card rev" style="transition-delay:.22s"><span class="ci2">🎨</span><div class="ct">AI Design</div><div class="cd">AI ব্যবহার করে এমন ডিজাইন যা developer-দের ছাড়িয়ে যায় — এটাই লক্ষ্য।</div></div>
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <div class="sec-lbl">// Interests &amp; Expertise</div>
+    <h2 class="sec-title">Fields I'm <span class="accent">passionate</span> about</h2>
   </div>
-
+  <div class="grid">
+    <div class="card rev" style="transition-delay:.04s"><span class="ci2">🧠</span><div class="ct">Artificial Intelligence</div><div class="cd">AI tools ব্যবহার করে professional-level কাজ করা — ChatGPT, ML models, আর generative AI দিয়ে নতুন সম্ভাবনা তৈরি করা।</div></div>
+    <div class="card rev" style="transition-delay:.10s"><span class="ci2">🤖</span><div class="ct">Robotics</div><div class="cd">Machine learning ও physical computing মিলিয়ে smart robot তৈরি — যেগুলো শুধু চলে না, চিন্তাও করে।</div></div>
+    <div class="card rev" style="transition-delay:.16s"><span class="ci2">⚙️</span><div class="ct">Mechatronics</div><div class="cd">Electronics, mechanics আর software — সব একসাথে নিয়ে smart machine তৈরি করার passion।</div></div>
+    <div class="card rev" style="transition-delay:.22s"><span class="ci2">🎨</span><div class="ct">AI Design</div><div class="cd">AI ব্যবহার করে এমন ডিজাইন যা professional developer-দেরও ছাড়িয়ে যায় — creative আর technical skill-এর সংমিশ্রণ।</div></div>
+  </div>
   <div class="stats rev" style="transition-delay:.1s">
     <div class="stat"><span class="sn" data-target="14">0</span><div class="sl">Age</div></div>
     <div class="stat"><span class="sn" data-target="8">0</span><div class="sl">Class</div></div>
     <div class="stat"><span class="sn">∞</span><div class="sl">Curiosity</div></div>
     <div class="stat"><span class="sn">3+</span><div class="sl">Fields</div></div>
   </div>
-
   <a href="http://www.mic.edu.bd" target="_blank" class="sbadge rev" style="transition-delay:.14s">
     <div class="sd">🏫</div>
     <div><div class="sn2">Mohanagar Ideal School</div><div class="ss">Class VIII · Dhaka, BD · mic.edu.bd ↗</div></div>
   </a>
 </section>
 
-<footer>Built with passion by <span class="gtext">Al Fahmid Rafi</span> · 2025 · Dhaka, Bangladesh</footer>
+<!-- SKILLS -->
+<section class="sec">
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <div class="sec-lbl">// Skills &amp; Tools</div>
+    <h2 class="sec-title">What I <span class="accent">work with</span></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill rev" style="transition-delay:.04s">
+      <div class="skill-top"><span class="skill-name">🧠 AI &amp; ML Tools</span><span class="skill-pct">90%</span></div>
+      <div class="skill-bar"><div class="skill-fill sf1" data-w="90"></div></div>
+    </div>
+    <div class="skill rev" style="transition-delay:.08s">
+      <div class="skill-top"><span class="skill-name">🎨 AI-Powered Design</span><span class="skill-pct">85%</span></div>
+      <div class="skill-bar"><div class="skill-fill sf2" data-w="85"></div></div>
+    </div>
+    <div class="skill rev" style="transition-delay:.12s">
+      <div class="skill-top"><span class="skill-name">🤖 Robotics Concepts</span><span class="skill-pct">75%</span></div>
+      <div class="skill-bar"><div class="skill-fill sf3" data-w="75"></div></div>
+    </div>
+    <div class="skill rev" style="transition-delay:.16s">
+      <div class="skill-top"><span class="skill-name">⚙️ Mechatronics</span><span class="skill-pct">70%</span></div>
+      <div class="skill-bar"><div class="skill-fill sf4" data-w="70"></div></div>
+    </div>
+    <div class="skill rev" style="transition-delay:.20s">
+      <div class="skill-top"><span class="skill-name">💻 Web &amp; No-Code</span><span class="skill-pct">80%</span></div>
+      <div class="skill-bar"><div class="skill-fill sf5" data-w="80"></div></div>
+    </div>
+    <div class="skill rev" style="transition-delay:.24s">
+      <div class="skill-top"><span class="skill-name">🎬 Content Creation</span><span class="skill-pct">78%</span></div>
+      <div class="skill-bar"><div class="skill-fill sf6" data-w="78"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="sec">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <div class="sec-lbl">// Featured Projects</div>
+    <h2 class="sec-title">Things I've <span class="accent">built</span></h2>
+  </div>
+  <div class="grid">
+    <a href="https://misc-ai-bd.lovable.app" target="_blank" class="proj-card pc1 rev" style="transition-delay:.04s">
+      <div class="proj-icon">🤖</div>
+      <div class="proj-title">AI Projects Hub</div>
+      <div class="proj-desc">AI দিয়ে তৈরি বিভিন্ন project-এর collection — generative AI, chatbot, আর creative tool-সমূহ।</div>
+      <div class="proj-tags"><span class="proj-tag">AI</span><span class="proj-tag">Generative</span><span class="proj-tag">No-Code</span></div>
+      <div class="proj-link">View Project <span class="arr">→</span></div>
+    </a>
+    <a href="https://www.youtube.com/channel/UCxBGeBX9PIfIrd7N9fpR7UA" target="_blank" class="proj-card pc2 rev" style="transition-delay:.10s">
+      <div class="proj-icon">🎬</div>
+      <div class="proj-title">YouTube Channel</div>
+      <div class="proj-desc">AI, robotics আর technology নিয়ে educational content — নতুন generation-কে inspire করার লক্ষ্যে।</div>
+      <div class="proj-tags"><span class="proj-tag">Content</span><span class="proj-tag">Education</span><span class="proj-tag">Tech</span></div>
+      <div class="proj-link">Visit Channel <span class="arr">→</span></div>
+    </a>
+    <a href="http://www.mic.edu.bd" target="_blank" class="proj-card pc3 rev" style="transition-delay:.16s">
+      <div class="proj-icon">🏫</div>
+      <div class="proj-title">School Community</div>
+      <div class="proj-desc">Mohanagar Ideal College — যেখানে আমি পড়ি আর নিজের জ্ঞান দিয়ে school community-তে অবদান রাখি।</div>
+      <div class="proj-tags"><span class="proj-tag">Community</span><span class="proj-tag">Education</span></div>
+      <div class="proj-link">Learn More <span class="arr">→</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section class="sec">
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <div class="sec-lbl">// My Journey</div>
+    <h2 class="sec-title">The road <span class="accent">so far</span></h2>
+  </div>
+  <div class="timeline rev">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2024</div>
+      <div class="tl-title">🚀 AI দুনিয়ায় প্রবেশ</div>
+      <div class="tl-desc">প্রথমবার AI tool ব্যবহার করে নিজের কিছু তৈরি করা — এখান থেকেই শুরু। ChatGPT আর generative AI-তে আগ্রহ তৈরি হয়।</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2025 — Early</div>
+      <div class="tl-title">⚡ Skill বাড়ানো</div>
+      <div class="tl-desc">Robotics আর mechatronics নিয়ে গভীরভাবে পড়া শুরু। YouTube channel-এ content তৈরি করা শুরু — অন্যদের সাথে জ্ঞান শেয়ার করা।</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2025 — Mid</div>
+      <div class="tl-title">🎨 Design &amp; Projects</div>
+      <div class="tl-desc">AI দিয়ে professional-level design তৈরি করা শুরু। নিজের portfolio আর project hub তৈরি — যা professional developer-রাও প্রশংসা করে।</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">Future →</div>
+      <div class="tl-title">🔮 লক্ষ্য</div>
+      <div class="tl-desc">AI-powered robot তৈরি করা যা সত্যিকারের সমস্যা solve করবে। Bangladesh-কে technology-তে এগিয়ে নিয়ে যাওয়া — এটাই আমার স্বপ্ন।</div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-sec">
+  <div class="quote-mark rev">"</div>
+  <div class="quote-text rev" style="transition-delay:.06s">
+    বয়স কখনো সীমা নয় — <span class="hl">curiosity আর passion</span> দিয়ে যেকোনো কিছু তৈরি করা সম্ভব।
+  </div>
+  <div class="quote-author rev" style="transition-delay:.12s">— Al Fahmid Rafi</div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-cta">
+  <h2 class="rev">Let's build the <span style="background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">future</span> together</h2>
+  <p class="rev" style="transition-delay:.06s">AI, robotics, বা যেকোনো creative project নিয়ে কথা বলতে চাও? আমার সাথে যোগাযোগ করো — একসাথে নতুন কিছু তৈরি করি।</p>
+  <div class="contact-links rev" style="transition-delay:.12s">
+    <a href="https://wa.me/8801764258407" target="_blank" class="clink cl-wa">💬 WhatsApp</a>
+    <a href="mailto:alfahmidrafi12@gmail.com" class="clink cl-em">📧 Email Me</a>
+    <a href="https://www.youtube.com/channel/UCxBGeBX9PIfIrd7N9fpR7UA" target="_blank" class="clink cl-yt">▶ YouTube</a>
+  </div>
+</section>
+
+<footer>
+  <div class="flinks">
+    <a href="https://wa.me/8801764258407" target="_blank">WhatsApp</a>
+    <a href="mailto:alfahmidrafi12@gmail.com">Email</a>
+    <a href="https://www.youtube.com/channel/UCxBGeBX9PIfIrd7N9fpR7UA" target="_blank">YouTube</a>
+    <a href="https://misc-ai-bd.lovable.app" target="_blank">Projects</a>
+    <a href="http://www.mic.edu.bd" target="_blank">School</a>
+  </div>
+  Built with passion by <span class="gtext">Al Fahmid Rafi</span> · 2025 · Dhaka, Bangladesh
+</footer>
 
 <!-- MODAL -->
 <div class="mo" id="mo" onclick="closeOut(event)">
@@ -481,12 +742,12 @@ addEventListener('mousemove',e=>{
   bmw.style.transform=`translate(-50%,-65%) rotate(${tilt}deg)`;
   window._addTrail(mx,my);px=mx;
 });
-document.querySelectorAll('a,button,.card,.tag,.sbadge').forEach(el=>{
+document.querySelectorAll('a,button,.card,.tag,.sbadge,.proj-card,.skill').forEach(el=>{
   el.addEventListener('mouseenter',()=>bmw.classList.add('hover'));
   el.addEventListener('mouseleave',()=>bmw.classList.remove('hover'));
 });
 
-/* CONTACT */
+/* CONTACT DROPDOWN */
 function toggleContact(){document.getElementById('cdrop').classList.toggle('open');}
 addEventListener('click',e=>{if(!document.querySelector('.cw').contains(e.target))document.getElementById('cdrop').classList.remove('open');});
 
@@ -498,6 +759,27 @@ document.querySelectorAll('.rev').forEach(el=>ro.observe(el));
 function countUp(el,t){let s=null;(function st(ts){if(!s)s=ts;const p=Math.min((ts-s)/1300,1);el.textContent=Math.floor(p*t);if(p<1)requestAnimationFrame(st);else el.textContent=t;})(performance.now());}
 const no=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&e.target.dataset.target){countUp(e.target,+e.target.dataset.target);no.unobserve(e.target);}}),{threshold:.5});
 document.querySelectorAll('.sn[data-target]').forEach(el=>no.observe(el));
+
+/* SKILL BARS */
+const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const f=e.target.querySelector('.skill-fill');if(f&&f.dataset.w)f.style.width=f.dataset.w+'%';so.unobserve(e.target);}}),{threshold:.3});
+document.querySelectorAll('.skill').forEach(el=>so.observe(el));
+
+/* TYPING EFFECT */
+(function(){
+  const phrases=['AI Specialist','Robotics Enthusiast','Creative Designer','Future Builder','Mechatronics Lover'];
+  const el=document.getElementById('typed');
+  let pi=0,ci=0,deleting=false;
+  function tick(){
+    const cur=phrases[pi];
+    if(deleting){ci--;}else{ci++;}
+    el.textContent=cur.slice(0,ci);
+    let delay=deleting?40:80;
+    if(!deleting&&ci===cur.length){delay=1800;deleting=true;}
+    else if(deleting&&ci===0){deleting=false;pi=(pi+1)%phrases.length;delay=300;}
+    setTimeout(tick,delay);
+  }
+  tick();
+})();
 
 /* MODALS */
 const MD={
